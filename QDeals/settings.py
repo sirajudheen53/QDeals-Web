@@ -109,10 +109,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'qdeals',
-        'USER': 'Sirajudheen',
+        'USER': 'sirajudheen',
         'PASSWORD': 'myLock',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
 }
 

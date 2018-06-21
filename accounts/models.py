@@ -8,4 +8,4 @@ class QUser(models.Model):
         primary_key=True,
     )
     phone_number = models.CharField(max_length=13)
-    provider = models.CharField(max_length=10)
+    provider = models.CharField(max_length=10, null=True)
