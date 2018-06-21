@@ -7,21 +7,23 @@ FACEBOOK_APP_SECRET = '89455b4348ff831e3c4a5541aa6467f6'
 
 class LoginView(APIView):
     def post(self, request, format=None):
-        access_token = request['access_token']
-        provider = request['provider']
+        access_token = request.data['access_token']
+        provider = request.data['provider']
         if provider=='facebook':
             print(provider)
         elif provider=='google':
-            print(provider)
+            self.validateGoogleLogin(access_token)
+            return Response("Google sign in")
         else:
             return  Response({'status' : 'failed', 'message' : 'Provide valid login provider'})
 
     def validateGoogleLogin(self, access_token):
-        app_link = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + access_token
+        app_link = 'https://www.googleapis.com/plus/v1/people/me?access_token=' + access_token
         try:
-            user = requests.get(app_link).json()['data']
+            user = requests.get(app_link).json()
             print(user)
         except (ValueError, KeyError, TypeError) as error:
+            print(error)
             return error
         return user
 
