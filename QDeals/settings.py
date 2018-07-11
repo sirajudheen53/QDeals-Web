@@ -27,7 +27,7 @@ DEBUG = False
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'staticfiles/'
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'https://q-deals.herokuapp.com/']
 
 # Application definition
 
