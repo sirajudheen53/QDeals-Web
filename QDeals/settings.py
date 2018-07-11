@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -23,10 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'to#b#vwu$tsao4@g2de)kx5r)&g0py^)ka@3!r=kx@hfi^dk@7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'staticfiles/'
 
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 # Application definition
 
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'rest_framework.authtoken',
     'django.contrib.staticfiles',
     'deals',
     'accounts',
@@ -45,11 +47,13 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.DjangoModelPermissions'
-    # ]
+    'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     )
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -108,10 +112,10 @@ WSGI_APPLICATION = 'QDeals.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'qdeals',
-        'USER': 'sirajudheen',
-        'PASSWORD': 'myLock',
-        'HOST': 'localhost',
+        'NAME': 'd4tkqgcar0m9tj',
+        'USER': 'szojxbtzfxshtl',
+        'PASSWORD': 'ca0c56e84ebcfcd9ae9a88d40318e4991af12e867e5f842053372110037e395c',
+        'HOST': 'ec2-54-227-240-7.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -148,8 +152,3 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_URL = '/static/'

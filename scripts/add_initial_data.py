@@ -22,12 +22,14 @@ def run():
             each_category['image'] = 'images/food.jpg'
             serializer = CategorySerializer(data=each_category)
             if serializer.is_valid():
-                if not Category.objects.get(name=each_category['name']):
+                try:
+                    Category.objects.get(name=each_category['name'])
+                except Category.DoesNotExist:
                     serializer.save()
         else:
             print(serializer.errors)
     except Exception as e:
-        print('%s (%s)' % (e.message, type(e)))
+        print(e.args, 'Exception in category')
 
    # Add Vendors Data
     try:
@@ -35,24 +37,21 @@ def run():
             each_vendor['image'] = 'images/%s.jpg' % each_vendor['name']
             serializer = VendorSerializer(data=each_vendor)
             if serializer.is_valid():
-                if not Vendor.objects.get(name=each_category['name']):
+                try:
+                    Vendor.objects.get(name=each_vendor['name'])
+                except Vendor.DoesNotExist:
                     serializer.save()
             else:
                 print(serializer.errors)
     except Exception as e:
-        print('%s (%s)' % (e.message, type(e)))
+        print(e.args, 'Exception in Vendors')
 
         # Add Deals Data
     try:
         for each_deal in deals:
 
-            todayDate = datetime.now()
-            todayDateString = todayDate.strftime("%Y-%m-%d %H:%M:%S")
-            expiryDate = todayDate + timedelta(days=15)
-            expiryDateString = expiryDate.strftime("%Y-%m-%d %H:%M:%S")
-
-            each_deal['end_date'] = expiryDateString
-            each_deal['start_date'] = todayDateString
+            each_deal['end_date'] = str( datetime.utcnow() + timedelta(days=15) )
+            each_deal['start_date'] = str( datetime.utcnow() )
 
             if 'description' not in each_deal:
                 each_deal['description'] = each_deal['title']
@@ -62,11 +61,13 @@ def run():
             each_deal['image'] = 'images/food.jpg'
             serializer = DealSerializer(data=each_deal)
             if serializer.is_valid():
-                if not Deal.objects.get(name=each_category['title']):
+                try:
+                    Deal.objects.get(title=each_deal['title'])
+                except Deal.DoesNotExist:
                     serializer.save()
             else:
                 print(serializer.errors)
     except Exception as e:
-        print ('%s (%s)' % (e.message, type(e)))
+        print(e.args, 'Exception in deal')
 
     print('Values added')

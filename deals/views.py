@@ -5,6 +5,8 @@ from .models import Deal, WishList, Purchase
 from rest_framework import authentication, permissions
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class AllDealsList(APIView):
     def get(self, request, format=None):
@@ -24,7 +26,11 @@ class AddToWishList(APIView):
             user = request.user
             deal_id = request.data['deal_id']
             deal = Deal.objects.get(id=deal_id)
-            if deal.end_date>datetime.now():
+            now = timezone.now()
+            print(datetime.now())
+            print(now)
+            print(deal.end_date)
+            if deal.end_date>now:
                 return Response({'status': 'failure', 'message': 'provided deal is expired already'})
             else:
                 new_entry = WishList.objects.create(user=user, deal=deal)
@@ -36,7 +42,6 @@ class AddToWishList(APIView):
 
 class MakePurchase(APIView):
     authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAdminUser,)
 
     def isUserPurchaseValid(self):
         return True
@@ -45,7 +50,11 @@ class MakePurchase(APIView):
         try:
             user = request.user
             deal_id = request.data['deal_id']
-            deal = Purchase.objects.get(id=deal_id)
+            deal = Deal.objects.get(id=deal_id)
+            now = timezone.now()
+            print(deal.end_date)
+            print(datetime.now())
+
             if not self.isUserPurchaseValid():
                 return Response({'status': 'failure', 'message': 'It is not a valid purchase'})
             elif deal.end_date>datetime.now():
@@ -54,12 +63,14 @@ class MakePurchase(APIView):
                 active_old_purchases_count = Purchase.objects.filter(user=user, deal=deal, isUsed=False, expiry__gt=datetime.now()).count
                 if active_old_purchases_count >= deal.number_of_simultaneous_purchase:
                     return Response({'status': 'failure', 'message': 'You can only purchase %d numbers simultaneouly for this deal'})
-                else:
-                    new_purchase_entry = Purchase.objects.create(user=user, deal=deal, expiry_date=datetime.now()+1)
-                    new_purchase_entry.save()
+
+        except Purchase.DoesNotExist:
+            new_purchase_entry = Purchase.objects.create(user=user, deal=deal, expiry_date=datetime.now() + 1)
+            new_purchase_entry.save()
         except Deal.DoesNotExist:
             return Response({'status' : 'failure', 'message' : 'could not find any deal with given id'})
-        except:
+        except Exception as e:
+            print(e.args)
             return Response({'status' : 'failure', 'message' : 'request does not comply paramters'})
 
 
