@@ -9,3 +9,4 @@ runscript==0.2.6
 Pillow==5.1.0
 gunicorn
 dj-database-url
+sampledeploy
